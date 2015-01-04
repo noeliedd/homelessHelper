@@ -47,7 +47,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'tab-encounter': {
         templateUrl: 'templates/tab-encounter.html',
-        controller: 'EncounterCtrl'
       }
     }
   })
@@ -56,48 +55,34 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       views: {
         'tab-route': {
           templateUrl: 'templates/tab-route.html',
-          controller: 'RouteCtrl'
+          controller: 'AddDropCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+  .state('tab.route-drop', {
+      url: '/drops',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-route': {
+          templateUrl: 'templates/route-drop.html',
         }
       }
     })
-
-  .state('tab.friends', {
+.state('tab.friends', {
       url: '/friends',
       views: {
         'tab-friends': {
           templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
         }
       }
     })
-    .state('tab.friend-detail', {
+    /*  .state('tab.friend-detail', {
       url: '/friend/:friendId',
       views: {
         'tab-friends': {
           templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
         }
       }
-    })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+    })*/
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

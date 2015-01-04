@@ -21,13 +21,17 @@ angular.module('starter.controllers', [])
         var map = new google.maps.Map(document.getElementById("map"), mapOptions); 
         $scope.map = map;    
 })
-
+.controller('AddDropCtrl', function($scope, $state) {
+  $scope.addDrop = function(){
+    $state.go('tab.route-drop');
+  }
+})
 .controller('RouteCtrl', function($scope) {
 })
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
-.controller('FriendsCtrl', function($scope, Friends) {
+.controller('FriendsCtrl', function($scope) {
   $scope.friends = Friends.all();
 })
 .controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
