@@ -34,28 +34,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     templateUrl: 'templates/tab-login.html',
     controller: 'LoginCtrl'
   })
+  .state('routeSelection', {
+    url: '/routeSelection',
+    templateUrl: 'templates/tab-routeSelection.html',   
+    controller: 'RouteSelectionCtrl'
+  })  
   // setup an abstract state for the tabs directive
     .state('tab', {
     url: "/tab",
     abstract: true,
     templateUrl: "templates/tabs.html"
   })
-
   // Each tab has its own nav history stack:
-  .state('tab.encounter', {
-    url: '/encounter',
-    views: {
-      'tab-encounter': {
-        templateUrl: 'templates/tab-encounter.html',
-      }
-    }
-  })
   .state('tab.route', {
       url: '/route',
       views: {
         'tab-route': {
           templateUrl: 'templates/tab-route.html',
-          controller: 'AddDropCtrl'
+          controller: 'RouteCtrl'
         }
       }
     })
