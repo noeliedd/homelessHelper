@@ -27,7 +27,7 @@ angular.module('starter.controllers', [])
     function displayMap(){
     var home;      
     pos = navigator.geolocation;
-    pos.getCurrentPosition(success, error); 
+    pos.watchPosition(success, error,{ enableHighAccuracy: true,}); 
     function success(position)
     {  
       var mylat = position.coords.latitude;
