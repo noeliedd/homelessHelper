@@ -20,9 +20,11 @@ angular.module('starter.controllers', [])
   };    
 })
 .controller('MapCtrl', function($scope, Coords) {
-    $scope.initialize = function(){  
-    initialize();
+    displayMap();
+    $scope.refreshMap = function(){  
+    displayMap();
   };
+    function displayMap(){
     var home;      
     pos = navigator.geolocation;
     pos.getCurrentPosition(success, error); 
@@ -68,6 +70,7 @@ angular.module('starter.controllers', [])
         path.push(coord);     
       }
    }   
+  }
 })
 .controller('RouteCtrl', function($scope, $state) {
   $scope.addDropDetails = function(){
