@@ -6,9 +6,9 @@ angular.module('starter.controllers', [])
   }
 })
 .controller('RouteSelectionCtrl', function($scope, $state) {
-  $scope.routeA = function(){
+  $scope.routeA = function(){  
     $state.go("tab.route");
-  }
+  };
   $scope.routeB = function(){
     $state.go("tab.route");
   }; 
@@ -19,37 +19,55 @@ angular.module('starter.controllers', [])
     $state.go("tab.route");
   };    
 })
-.controller('MapCtrl', function($scope) {
-  
-       /* var myLatlng = new google.maps.LatLng(53.3550092,-6.248268); 
-        var mapOptions = {
-            center: myLatlng,
-            zoom: 16,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        }; 
-        var map = new google.maps.Map(document.getElementById("map"), mapOptions); 
-        $scope.map = map; */
-    var map;
+.controller('MapCtrl', function($scope, Coords) {
+    $scope.initialize = function(){  
+    initialize();
+  };
+    var home;      
     pos = navigator.geolocation;
-    pos.getCurrentPosition(success, error);
- //if position attained   
+    pos.getCurrentPosition(success, error); 
     function success(position)
     {  
       var mylat = position.coords.latitude;
       var mylong = position.coords.longitude;     
-      coords = new google.maps.LatLng(mylat, mylong);
+      home = new google.maps.LatLng(mylat, mylong);
       initialize();
     }
-//if get position unsuccessful
     function error()
     {   
       alert("Please ensure your browser supports location tracking and that you have it enabled.");
     } 
-//initialize map using current position coordinates
     function initialize() {
-      var mapOptions = {zoom: 16,center: coords,mapTypeId: google.maps.MapTypeId.ROADMAP};
-      map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    }
+      var mapOptions = {center: home,zoom: 18, mapTypeId: google.maps.MapTypeId.ROADMAP,draggable: true}; 
+      map = new google.maps.Map(document.getElementById("map"), mapOptions);         
+      var currentPosMarker = new google.maps.Marker({map: map,position:home, animation: google.maps.Animation.BOUNCE}); 
+      var image = 'img/homePin.png';
+      var hQ = new google.maps.LatLng(53.3550092,-6.248268); 
+      var marker = new google.maps.Marker({map: map,position:hQ, icon: image});  
+    
+  //arrowed line symbol
+      var arrowSymbol = {path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,strokeColor: '#FF0000',strokeOpacity: 1.0};
+      var polyOptions = {strokeColor: '#FF0000',strokeOpacity: 1.0,strokeWeight: 2,icons: [{
+                icon: arrowSymbol,
+                offset: '100%',
+                repeat:'55px',
+            }]};
+    //Create polyline and set map to it
+      var poly = new google.maps.Polyline(polyOptions);
+      poly.setMap(map);    
+
+     $scope.coords = Coords.all();     
+     $scope.map = map; 
+
+     for(var i=0;i<$scope.coords.length;i++)
+     {
+        var lat = $scope.coords[i].lat;
+        var lng = $scope.coords[i].lng;
+        var coord = new google.maps.LatLng(lat,lng);       
+        var path = poly.getPath();
+        path.push(coord);     
+      }
+   }   
 })
 .controller('RouteCtrl', function($scope, $state) {
   $scope.addDropDetails = function(){
@@ -59,8 +77,8 @@ angular.module('starter.controllers', [])
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
-.controller('FriendsCtrl', function($scope) {
-  $scope.friends = Friends.all();
+.controller('FriendsCtrl', function($scope, Coords) {
+  $scope.coords = Coords.all();
 })
 .controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
   $scope.friend = Friends.get($stateParams.friendId);

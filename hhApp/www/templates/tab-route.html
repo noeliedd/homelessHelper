@@ -1,8 +1,11 @@
-<ion-view view-title="Route" ng-controller='MapCtrl'>
+<ion-view view-title="Route" >  
+   <ion-nav-buttons side="right">
+      <button class="button" ng-controller='MapCtrl' data-ng-click="initialize()"><i class ="icon ion-refresh"></i></button>
+  </ion-nav-buttons>
   <ion-content>
-      <div id="map" data-tap-disabled="true"></div>
+      <div id="map" ng-controller='MapCtrl' data-tap-disabled="true"></div>
       <ion-footer-bar class="bar-dark">
-        <a ng-click="addDropDetails()" class="button button-icon ion-plus-round">Add Drop Details</a>
+        <a ng-click="addDropDetails()" class="button button-icon ion-plus-round">Add Drop Details</a>        
       </ion-footer-bar>
   </ion-content>
 </ion-view>
