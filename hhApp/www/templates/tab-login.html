@@ -13,7 +13,7 @@
     </button>    
     
     <div class="list" ng-controller = "TestCtrl">
-      <h1>There are {{meetups.length}} names</h1>
+      <h3>There are {{meetups.length}} names</h3>
       
         <ion-list>
           <ion-item ng-repeat="meetup in meetups" type="item-text-wrap" >
@@ -24,7 +24,7 @@
       <form ng-submit ="createTest()">
         <label class="item item-input">
         <input type="text" placeholder="text" ng-model ="testText">
-        <button class="button button-full button-positive" type ="submit">
+        <button class="button button-positive" type ="submit">
             Add
         </button>    
         </label>

@@ -8,8 +8,7 @@ angular.module('starter.controllers', [])
     var meetup = new Meetup();
     meetup.name = $scope.testText;
     meetup.$save();
-   // $scope.meetups.push({name: $scope.testText});
-   // $scope.testText ="";
+    $scope.testText ="";
     }
 }])
 .controller('LoginCtrl', function($scope,LoginService, $ionicPopup, $state) {
