@@ -1,16 +1,43 @@
 angular.module('starter.controllers', [])
 .controller('TestCtrl',['$scope','$resource',function($scope, $resource){
   var Meetup = $resource("http://homelessbackend-187844.euw1.nitrousbox.com/api/hello");
-    
-  $scope.meetups =[{name: "Noel"}];
   
-  $scope.createTest= function(){
+    $scope.createTest= function(){
     var meetup = new Meetup();
     meetup.name = $scope.testText;
+      console.log($scope.testText);
     meetup.$save();
     $scope.testText ="";
     }
 }])
+.controller('LoginCtrl',function($scope,$http,$ionicPopup,$state){
+  $scope.login = function(){
+  var email = $scope.email;
+  var password = $scope.password;
+    console.log(email,password);
+    $http.post('http://homelessbackend-187844.euw1.nitrousbox.com/api/loginUser', {email: email, password: password}).
+  success(function(data, status, headers, config) {
+    // this callback will be called asynchronously
+    // when the response is available
+    if(data == "valid"){
+      $state.go('routeSelection');
+    }else{
+       var alertPopup = $ionicPopup.alert({
+           title: 'Login failed!',
+           template: 'Please check your credentials!'
+       });      
+    }
+    console.log(data);
+  }).
+  error(function(data, status, headers, config) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+  });
+    $scope.email ="";
+    $scope.password ="";
+  }
+})
+/*
 .controller('LoginCtrl', function($scope,LoginService, $ionicPopup, $state) {
     $scope.data = {}; 
     $scope.login = function() {
@@ -25,7 +52,7 @@ angular.module('starter.controllers', [])
               $scope.data.password ="";
             });
         }
-})
+})*/
 .controller('RouteSelectionCtrl', function($scope, $state) {
   $scope.routeA = function(){  
     $state.go("tab.route");
