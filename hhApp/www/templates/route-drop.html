@@ -1,69 +1,62 @@
 <ion-view view-title="Drop">
   <ion-content class="padding">
-      <div class="list">
-        <label class="item item-input item-select">
-          <div class="input-label">
-            Males Fed
+      <div class ="List">
+        <form ng-submit ="submitDropDetails(totalMale,totalMaleFed,totalMaleClothed,totalFemale,totalFemaleFed,totalFemaleClothed)">
+          <div class="item item-divider">
+             <i class="icon ion-man"></i>
+              Males
           </div>
-          <select>
-            <option selected>0</option>
-            <option>1</option>          
-            <option>2</option>
-            <option>3</option> 
-            <option>4</option>
-            <option>5</option>
-            <option>6</option> 
-            <option>7</option>            
-          </select>
-        </label>
-        <label class="item item-input item-select">
-          <div class="input-label">
-            Males Clothed
-          </div>
-          <select>
-            <option selected>0</option>
-            <option>1</option>    
-            <option>2</option>
-            <option>3</option> 
-            <option>4</option>
-            <option>5</option>
-            <option>6</option> 
-            <option>7</option>            
-          </select>
-        </label>
-        <label class="item item-input item-select">
-          <div class="input-label">
-            Females Fed
-          </div>
-          <select>
-            <option selected>0</option>
-            <option>1</option>    
-            <option>2</option>
-            <option>3</option> 
-            <option>4</option>
-            <option>5</option>
-            <option>6</option> 
-            <option>7</option>            
-          </select>
-        </label> 
-        <label class="item item-input item-select">
-          <div class="input-label">
-            Females Clothed
-          </div>
-          <select>
-            <option selected>0</option>
-            <option>1</option>    
-            <option>2</option>
-            <option>3</option> 
-            <option>4</option>
-            <option>5</option>
-            <option>6</option> 
-            <option>7</option>            
-          </select>
-        </label>      
-      </div>
-      <button class="button button-full button-positive">
-        Submit Encounter
-      </button>
+          <label class="item item-input item-select">
+              <div class="input-label">
+                  Total  
+              </div>              
+              <select ng-model="totalMale" ng-options="opt as opt.value for opt in dropDownValue" ng-init="totalMale = dropDownValue[0]">
+              </select>                 
+          </label>    
+          <label class="item item-input item-select">
+             <div class="input-label">
+                Fed
+             </div>
+              <select ng-model="totalMaleFed" ng-options="opt as opt.value for opt in dropDownValue" ng-init="totalMaleFed = dropDownValue[0]">
+              </select>  
+             </label>
+             <label class="item item-input item-select">
+             <div class="input-label">               
+                Clothed
+             </div>
+              <select ng-model="totalMaleClothed" ng-options="opt as opt.value for opt in dropDownValue" ng-init="totalMaleClothed = dropDownValue[0]">
+              </select>   
+             </label>
+            <div class="item item-divider">
+              <i class="icon ion-man"></i>
+              Females
+            </div>        
+            <label class="item item-input item-select">
+            <div class="input-label">
+                 Total  
+            </div>          
+              <select ng-model="totalFemale" ng-options="opt as opt.value for opt in dropDownValue" ng-init="totalFemale = dropDownValue[0]">
+              </select>   
+            </label>      
+             <label class="item item-input item-select">
+             <div class="input-label">
+                Fed
+             </div>
+              <select ng-model="totalFemaleFed" ng-options="opt as opt.value for opt in dropDownValue" ng-init="totalFemaleFed = dropDownValue[0]">
+              </select>  
+             </label>
+             <label class="item item-input item-select">
+             <div class="input-label">
+                Clothed
+             </div>
+              <select ng-model="totalFemaleClothed" ng-options="opt as opt.value for opt in dropDownValue" ng-init="totalFemaleClothed = dropDownValue[0]">
+              </select>  
+             </label>
+            <button class="button button-full button-positive" type ="submit">
+              Submit Encounter
+            </button>          
+          </form>
+        </div>  <!--List End-->
+
   </ion-content>
 </ion-view>

@@ -1,26 +1,27 @@
 angular.module('starter.services', [])
-.factory('LoginService', function($q) {
+.factory('ActiveRoutes', ['$http',function($http) {
     return {
-        loginUser: function(name, pw) {
-            var deferred = $q.defer();
-            var promise = deferred.promise;
- 
-            if (name == 'user' && pw == 'secret') {
-                deferred.resolve('Welcome ' + name + '!');
-            } else {
-                deferred.reject('Wrong credentials.');
-            }
-            promise.success = function(fn) {
-                promise.then(fn);
-                return promise;
-            }
-            promise.error = function(fn) {
-                promise.then(null, fn);
-                return promise;
-            }
-            return promise;
+        getActiveRoutes: function() {
+          $http.post('http://homelessbackend-187844.euw1.nitrousbox.com/api/activeRoutes').
+        success(function(data, status, headers, config) {
+          // this callback will be called asynchronously
+          // when the response is available
+          console.log("Number of route objects returned :" +data.body);
+        }).
+        error(function(data, status, headers, config) {
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
+        });          
         }
     }
+}])
+.factory('DropOptions',function(){
+   var dropDownValue =[
+     {value:0},{value:1},{value:2},{value:3},{value:4},{value:5}];
+    return {
+    dropDownValue: function() {
+      return dropDownValue;
+    }};   
 })
 .factory('Coords',function(){
    var coords =[{

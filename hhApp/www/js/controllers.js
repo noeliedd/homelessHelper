@@ -4,8 +4,8 @@ angular.module('starter.controllers', [])
   
     $scope.createTest= function(){
     var meetup = new Meetup();
-    meetup.name = $scope.testText;
-      console.log($scope.testText);
+    meetup.name = $scope.testText
+    console.log($scope.testText);
     meetup.$save();
     $scope.testText ="";
     }
@@ -14,7 +14,8 @@ angular.module('starter.controllers', [])
   $scope.login = function(){
   var email = $scope.email;
   var password = $scope.password;
-    console.log(email,password);
+  console.log(email,password);//test
+    
     $http.post('http://homelessbackend-187844.euw1.nitrousbox.com/api/loginUser', {email: email, password: password}).
   success(function(data, status, headers, config) {
     // this callback will be called asynchronously
@@ -22,12 +23,11 @@ angular.module('starter.controllers', [])
     if(data == "valid"){
       $state.go('routeSelection');
     }else{
-       var alertPopup = $ionicPopup.alert({
-           title: 'Login failed!',
-           template: 'Please check your credentials!'
-       });      
+      var alertPopup = $ionicPopup.alert({
+      title: data,
+      template: 'Please check your credentials!'
+      });      
     }
-    console.log(data);
   }).
   error(function(data, status, headers, config) {
     // called asynchronously if an error occurs
@@ -37,23 +37,8 @@ angular.module('starter.controllers', [])
     $scope.password ="";
   }
 })
-/*
-.controller('LoginCtrl', function($scope,LoginService, $ionicPopup, $state) {
-    $scope.data = {}; 
-    $scope.login = function() {
-            LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
-                $state.go('routeSelection');
-            }).error(function(data) {
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Login failed!',
-                    template: 'Please check your credentials!'
-                });
-              $scope.data.username ="";
-              $scope.data.password ="";
-            });
-        }
-})*/
-.controller('RouteSelectionCtrl', function($scope, $state) {
+.controller('RouteSelectionCtrl', function($scope, $state,ActiveRoutes) {
+  ActiveRoutes.getActiveRoutes();
   $scope.routeA = function(){  
     $state.go("tab.route");
   };
@@ -125,11 +110,19 @@ angular.module('starter.controllers', [])
     $state.go("tab.route-drop");
   }
 })
+.controller('DropCtrl', function($scope, $state, DropOptions) {
+    $scope.dropDownValue = DropOptions.dropDownValue();
+    $scope.submitDropDetails = function(a, b, c, d, e, f){
+      console.log(a.value,b.value,c.value,d.value, e.value, f.value);     
+      $state.go("tab.route");
+  }
+})
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 .controller('FriendsCtrl', function($scope, Coords) {
   $scope.coords = Coords.all();
+  console.log($scope.coords[0]);
 })
 .controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
   $scope.friend = Friends.get($stateParams.friendId);

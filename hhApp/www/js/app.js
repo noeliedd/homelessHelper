@@ -60,6 +60,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       views: {
         'tab-route': {
           templateUrl: 'templates/route-drop.html',
+          controller: 'DropCtrl'
         }
       }
     })

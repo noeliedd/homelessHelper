@@ -11,3 +11,7 @@
 .scroll{
   height: 100%;
 }
+.item-divider{
+  text-align: center;
+  font-weight:bold;
+}
