@@ -110,37 +110,65 @@ angular.module('starter.controllers', [])
 })
 
 //---------------------------------------ADD DROP DETAILS FOR PARTICULAR ROUTE--------------------------------------------------
-.controller('DropCtrl', function($scope, $state, DropOptions,$ionicPopup) {
+.controller('DropCtrl', function($scope, $state, DropOptions,$ionicPopup, $resource) {
     console.log(window.localStorage.getItem("savedRouteId"));  
     $scope.dropDownValue = DropOptions.dropDownValue();
     $scope.submitDropDetails = function(totalMale,totalMaleFed,totalMaleClothed,totalFemale,totalFemaleFed,totalFemaleClothed){
-     // console.log(totalMale.value,totalMaleFed.value,totalMaleClothed.value,totalFemale.value, totalFemaleFed.value, totalFemaleClothed.value);     
-     if(totalMale.value === 0 && totalFemale.value === 0){
-        var alertPopup = $ionicPopup.alert({
-        template: 'You have not entered a total for Male or Female!'
-        });        
-     }
-     else if(totalMale.value < (totalMaleFed.value + totalMaleClothed.value)|| totalFemale.value <(totalFemaleFed.value + totalFemaleClothed.value))
-     {
-        var alertPopupA = $ionicPopup.alert({
-        template: 'Cannot have more Fed/Clothed than total encountered'
-        });         
-     }else
-     {       
-       var confirmPopup = $ionicPopup.confirm({
-         title: 'Submit Drop Details',
-         template: 'Are you sure you want to submit these details?'
-       });
-       confirmPopup.then(function(res) {
-         if(res) {
-           console.log('You are sure');
-           $state.go("tab.route");           
-         } else {
-           console.log('You are not sure');
-         }
-       });
-     }          
-  }
+       if(totalMale.value === 0 && totalFemale.value === 0){
+            var alertPopup = $ionicPopup.alert({
+              template: 'You have not entered a total for Male or Female!'
+            });        
+       }else if(totalMale.value < (totalMaleFed.value + totalMaleClothed.value)|| totalFemale.value <(totalFemaleFed.value + totalFemaleClothed.value))
+       {
+          var alertPopupA = $ionicPopup.alert({
+            template: 'Cannot have more Fed/Clothed than total encountered'
+          });         
+       }else{       
+           var confirmPopup = $ionicPopup.confirm({
+               title: 'Submit Drop Details',
+               template: 'Are you sure you want to submit these details?'
+           });
+           confirmPopup.then(function(res) {
+             if(res) {
+                   pos = navigator.geolocation;
+                   pos.getCurrentPosition(success, error,{ enableHighAccuracy: true,}); 
+                   function error() {
+                       alert("error");
+                   };
+                    function success(position){
+                       var coords =[];
+                       var mylat = position.coords.latitude;
+                       var mylong = position.coords.longitude;     
+                       var currentPosition = new google.maps.LatLng(mylat, mylong);
+                       coords.push(currentPosition);
+                       var AddRouteDrop = $resource('http://ichh-202592.euw1-2.nitrousbox.com/api/addRouteDrop');             
+                       console.log('You are sure');               
+                       var addRouteDrop = new AddRouteDrop();
+                       addRouteDrop.routeId = window.localStorage.getItem("savedRouteId");
+                       addRouteDrop.totalMale = totalMale.value;
+                       addRouteDrop.totalMaleFed = totalMaleFed.value;
+                       addRouteDrop.totalMaleClothed = totalMaleClothed.value;
+                       addRouteDrop.totalFemale = totalFemale.value;
+                       addRouteDrop.totalFemaleFed = totalFemaleFed.value;
+                       addRouteDrop.totalFemaleClothed = totalFemaleClothed.value;   
+                       addRouteDrop.coordinates = coords;
+                       addRouteDrop.$save(function(response) {
+                           if(response.date){
+                               alert("Drop Added");
+                           }else{
+                               alert("Error occurred, details not inserted");
+                           }
+                       }, function(error) {
+                           alert(502 +"Internal Server Error ");
+                         });                       
+                       }
+                        $state.go("tab.route");           
+             } else {
+             console.log('You are not sure');
+           }
+         });
+       }          
+    }
 })
 
 //--------------------------------------------------------------------------------------------------------------------------------
