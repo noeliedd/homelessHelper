@@ -1,23 +1,14 @@
 angular.module('starter.controllers', [])
-.controller('TestCtrl',['$scope','$resource',function($scope, $resource){
-  var Meetup = $resource("http://homelessbackend-187844.euw1.nitrousbox.com/api/hello");
-  
-    $scope.createTest= function(){
-    var meetup = new Meetup();
-    meetup.name = $scope.testText
-    console.log($scope.testText);
-    meetup.$save();
-    $scope.testText ="";
-    }
-}])
+
+//---------------------------------------LOGIN CONTROLLER---------------------------------------------------------
 .controller('LoginCtrl',function($scope,$http,$ionicPopup,$state){
   $scope.login = function(){
   var email = $scope.email;
   var password = $scope.password;
   console.log(email,password);//test
     
-    $http.post('http://homelessbackend-187844.euw1.nitrousbox.com/api/loginUser', {email: email, password: password}).
-  success(function(data, status, headers, config) {
+    $http.post('http://ichh-202592.euw1-2.nitrousbox.com/api/loginUser', {email: email, password: password}).
+    success(function(data, status, headers, config) {
     // this callback will be called asynchronously
     // when the response is available
     if(data == "valid"){
@@ -37,22 +28,27 @@ angular.module('starter.controllers', [])
     $scope.password ="";
   }
 })
-.controller('RouteSelectionCtrl', function($scope, $state,ActiveRoutes) {
-  ActiveRoutes.getActiveRoutes();
-  $scope.routeA = function(){  
-    $state.go("tab.route");
-  };
-  $scope.routeB = function(){
-    $state.go("tab.route");
+
+//---------------------------------------SELECTING FROM ACTIVE ROUTES CONTROLLER------------------------------------------
+.controller('RouteSelectionCtrl', function($scope, $state,ActiveRoutes,Coords) {
+   ActiveRoutes.getAll().then(function(d){
+     $scope.routes =d;
+     console.log($scope.routes);
+   }); 
+    $scope.selectRoute = function(route){
+     console.log("This is in the controller"+route)
+     Coords.getAll(route).then(function(d){
+     $state.go("tab.route");
+   });      
   }; 
-  $scope.routeC = function(){
-    $state.go("tab.route");
-  }; 
-  $scope.routeD = function(){
-    $state.go("tab.route");
-  };    
 })
-.controller('MapCtrl', function($scope, Coords) {
+
+//---------------------------------------CONTROLLER FOR GOOGLE MAP--------------------------------------------------------
+.controller('MapCtrl', function($scope) {
+   console.log("Here is the juice");
+    var selectedRoute = JSON.parse(window.localStorage.getItem("savedRoute"));
+    console.log(selectedRoute);
+    console.log(window.localStorage.getItem("savedRouteId"));
     displayMap();
     $scope.refreshMap = function(){  
     displayMap();
@@ -90,14 +86,14 @@ angular.module('starter.controllers', [])
       //Create polyline and set map to it
         var poly = new google.maps.Polyline(polyOptions);
         poly.setMap(map);    
-
-       $scope.coords = Coords.all();     
+   
+       $scope.coords = selectedRoute;     
        $scope.map = map; 
 
        for(var i=0;i<$scope.coords.length;i++)
        {
-          var lat = $scope.coords[i].lat;
-          var lng = $scope.coords[i].lng;
+          var lat = $scope.coords[i].k;
+          var lng = $scope.coords[i].D;
           var coord = new google.maps.LatLng(lat,lng);       
           var path = poly.getPath();
           path.push(coord);     
@@ -105,21 +101,50 @@ angular.module('starter.controllers', [])
      }   
    }
 })
+
+//---------------------------------------NAVIGATES TO DROP DETAILS FOR PARTICULAR ROUTE-----------------------------------
 .controller('RouteCtrl', function($scope, $state) {
   $scope.addDropDetails = function(){
     $state.go("tab.route-drop");
   }
 })
-.controller('DropCtrl', function($scope, $state, DropOptions) {
+
+//---------------------------------------ADD DROP DETAILS FOR PARTICULAR ROUTE--------------------------------------------------
+.controller('DropCtrl', function($scope, $state, DropOptions,$ionicPopup) {
+    console.log(window.localStorage.getItem("savedRouteId"));  
     $scope.dropDownValue = DropOptions.dropDownValue();
-    $scope.submitDropDetails = function(a, b, c, d, e, f){
-      console.log(a.value,b.value,c.value,d.value, e.value, f.value);     
-      $state.go("tab.route");
+    $scope.submitDropDetails = function(totalMale,totalMaleFed,totalMaleClothed,totalFemale,totalFemaleFed,totalFemaleClothed){
+     // console.log(totalMale.value,totalMaleFed.value,totalMaleClothed.value,totalFemale.value, totalFemaleFed.value, totalFemaleClothed.value);     
+     if(totalMale.value === 0 && totalFemale.value === 0){
+        var alertPopup = $ionicPopup.alert({
+        template: 'You have not entered a total for Male or Female!'
+        });        
+     }
+     else if(totalMale.value < (totalMaleFed.value + totalMaleClothed.value)|| totalFemale.value <(totalFemaleFed.value + totalFemaleClothed.value))
+     {
+        var alertPopupA = $ionicPopup.alert({
+        template: 'Cannot have more Fed/Clothed than total encountered'
+        });         
+     }else
+     {       
+       var confirmPopup = $ionicPopup.confirm({
+         title: 'Submit Drop Details',
+         template: 'Are you sure you want to submit these details?'
+       });
+       confirmPopup.then(function(res) {
+         if(res) {
+           console.log('You are sure');
+           $state.go("tab.route");           
+         } else {
+           console.log('You are not sure');
+         }
+       });
+     }          
   }
 })
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
 .controller('FriendsCtrl', function($scope, Coords) {
   $scope.coords = Coords.all();
   console.log($scope.coords[0]);

@@ -8,6 +8,7 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngResource'])
 
 .run(function($ionicPlatform) {
+    
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -73,14 +74,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
       }
     })
-    /*  .state('tab.friend-detail', {
-      url: '/friend/:friendId',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-        }
-      }
-    })*/
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
