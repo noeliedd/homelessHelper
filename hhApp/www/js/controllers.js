@@ -118,7 +118,7 @@ angular.module('starter.controllers', [])
             var alertPopup = $ionicPopup.alert({
               template: 'You have not entered a total for Male or Female!'
             });        
-       }else if(totalMale.value < (totalMaleFed.value + totalMaleClothed.value)|| totalFemale.value <(totalFemaleFed.value + totalFemaleClothed.value))
+       }else if(totalMale.value < (totalMaleFed.value + totalMaleClothed.value)||totalFemale.value <(totalFemaleFed.value + totalFemaleClothed.value))
        {
           var alertPopupA = $ionicPopup.alert({
             template: 'Cannot have more Fed/Clothed than total encountered'
@@ -158,10 +158,10 @@ angular.module('starter.controllers', [])
                            }else{
                                alert("Error occurred, details not inserted");
                            }
-                       }, function(error) {
+                       },function(error) {
                            alert(502 +"Internal Server Error ");
                          });                       
-                       }
+                    }
                         $state.go("tab.route");           
              } else {
              console.log('You are not sure');
