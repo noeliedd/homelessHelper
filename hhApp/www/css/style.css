@@ -1,9 +1,22 @@
 /* Empty. Add your own CSS if you like */
 ion-content{
   background-image: linear-gradient(rgb(153, 178, 204), rgb(214, 224, 235));
+  text-align:center;
 } 
 .button{
   border-radius: 10px;
+}
+input.ng-invalid { 
+    background:#FFE6C0;
+    border: px blue solid;
+}
+textarea.ng-invalid { 
+    background:#FFE6C0;
+    border: px blue solid;
+}
+ion-item{
+  text-align:center;
+  font-weight:bold;
 }
 #map{
   display : block;

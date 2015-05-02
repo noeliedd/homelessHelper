@@ -49,7 +49,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       views: {
         'tab-route': {
           templateUrl: 'templates/tab-route.html',
-          controller: 'RouteCtrl'
+          controller: 'RouteCtrl',
+              resolve: {
+                loggedin: checkLoggedin
+              }            
         }
       }
     })
@@ -58,7 +61,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       views: {
         'tab-route': {
           templateUrl: 'templates/route-drop.html',
-          controller: 'DropCtrl'
+          controller: 'DropCtrl',
+              resolve: {
+                loggedin: checkLoggedin
+              }            
         }
       }
     })
@@ -67,7 +73,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       views: {
         'tab-route': {
           templateUrl: 'templates/route-order.html',
-          controller: 'OrderCtrl'
+          controller: 'OrderCtrl',
+              resolve: {
+                loggedin: checkLoggedin
+              }            
         }
       }
     })  
@@ -76,7 +85,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       views: {
         'tab-contacts': {
           templateUrl: 'templates/tab-contacts.html',
-          controller: 'ContactsCtrl'          
+          controller: 'ContactsCtrl',
+              resolve: {
+                loggedin: checkLoggedin
+              }            
         }
       }
     })
@@ -99,21 +111,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         };
     }); 
 });
+
 var checkLoggedin = function($q, $timeout, $ionicPopup, $location, $rootScope)
 {
     var deferred = $q.defer();
     console.log("checked login A");
-    console.log($rootScope.currentUser);
-    var user = $rootScope.currentUser;
+    var user = window.localStorage.getItem("currentUser");
     console.log(user);
 
         console.log("checked login B");
         console.log(user);
-        console.log($rootScope.currentUser);
-        $rootScope.currentUser = user;
+        console.log(window.localStorage.getItem("currentUser"));
+        //$rootScope.currentUser = user;
         $rootScope.errorMessage = null;
         // User is Authenticated
-        if (user !== '0')
+        if (user)
             deferred.resolve();
         // User is Not Authenticated
         else
@@ -126,8 +138,6 @@ var checkLoggedin = function($q, $timeout, $ionicPopup, $location, $rootScope)
             $rootScope.errorMessage = 'You need to log in.';
             deferred.reject();
             $location.url('/login');
-        }
- 
-    
+        }    
     return deferred.promise;
 };

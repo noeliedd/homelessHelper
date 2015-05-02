@@ -1,24 +1,24 @@
 angular.module('starter.services', [])
 //Posts user details to /Login on the server
-.factory('AuthLoginService', function($http,$location,$rootScope){  
+.factory('AuthLoginService', function($http,$location){  
   return{
       login: function(user,callback){
           $http.post('http://ichh-202592.euw1-2.nitrousbox.com/login', user)
               .success(function(user){  
-                console.log(user);
-                $rootScope.currentUser = user;
+                console.log(user[0]._id);
+                window.localStorage.setItem("currentUser", JSON.stringify(user[0]._id));                
                 callback(user);
               })
       } 
   }; 
 })
 //Called from the NavCtrl to logout the user
-.factory('AuthLogoutService', function($http,$location,$rootScope){ 
+.factory('AuthLogoutService', function($http,$location){ 
   return{ 
     logout: function(callback){
       $http.post('http://ichh-202592.euw1-2.nitrousbox.com/logout')
         .success(function(){  
-          $rootScope.currentUser = '0';
+          window.localStorage.removeItem("currentUser");
           callback();
         })
     } 
@@ -39,14 +39,10 @@ angular.module('starter.services', [])
 .factory('ActiveRoutes', function($http) {
   var ActiveRoutes = {
     getAll: function() {
-      // $http returns a promise, which has a then function, which also returns a promise
       var promise = $http.get('http://ichh-202592.euw1-2.nitrousbox.com/api/getActiveRoutes').then(function (response) {
-        // The then function here is an opportunity to modify the response
         console.log(response);
-        // The return value gets picked up by the then in the controller.
         return response.data;
       });
-      // Return the promise to the controller
       return promise;
     }
   };
@@ -57,9 +53,7 @@ angular.module('starter.services', [])
 .factory('Coords', function($http,$state) {
   var Coords = {
     getAll: function(id) {
-      // $http returns a promise, which has a then function, which also returns a promise
       var promise = $http.get('http://ichh-202592.euw1-2.nitrousbox.com/api/getRoute?route_id='+id).then(function (response) {
-        // The then function here is an opportunity to modify the response
          console.log(response);
          console.log("Hello baby");
          console.log(response.data._id);
@@ -67,13 +61,11 @@ angular.module('starter.services', [])
          window.localStorage.setItem("savedRoute", JSON.stringify(response.data.path));        
          return response.data;
       });
-      // Return the promise to the controller
       return promise;
     }
   };
   return Coords;
 })
-
 .factory('DropOptions',function(){
    var dropDownValue =[
      {value:0},{value:1},{value:2},{value:3},{value:4},{value:5},{value:6},{value:7},{value:8},{value:9}];
@@ -83,3 +75,25 @@ angular.module('starter.services', [])
     }};   
 })
 
+.factory('OrderService', function($resource){ 
+  return{     
+    submitDrop: function(order){    
+      console.log(order);
+      $http.post('http://ichh-202592.euw1-2.nitrousbox.com/api/addRouteOrder?routeId='+order.routeId+'&userId='+order.userId+'&name='+order.name+'&details='+order.details+'&location='+order.location)
+        .success(function(response){  
+            console.log(response);
+      })
+    } 
+  };
+})
+.factory('OrderService', function($http){ 
+  return{     
+    submitOrder: function(order){    
+      console.log(order);
+      $http.post('http://ichh-202592.euw1-2.nitrousbox.com/api/addRouteOrder?routeId='+order.routeId+'&userId='+order.userId+'&name='+order.name+'&details='+order.details+'&location='+order.location)
+        .success(function(response){  
+            console.log(response);
+      })
+    } 
+  };
+})

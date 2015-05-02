@@ -1,16 +1,18 @@
 <ion-view view-title="Orders">
   <ion-content class="padding">
       <div class ="List">
-        <form ng-submit ="submitOrderDetails">
+        <form ng-submit="submitOrderDetails(order)">
           <label class="item item-input">
-            <input type="text" placeholder="Reference Name">
+            Reference Name:            
           </label>
+          <input type="text" placeholder=" Required Field..." ng-model="order.name" required>
           <label class="item item-input">
-            <textarea rows="8"placeholder="Order Details"></textarea>
-          </label>          
+            Order Details:            
+          </label>  
+          <textarea rows="8"placeholder=" Required Field..." ng-model="order.details" required></textarea>
           <button class="button button-full button-positive" type ="submit">
             Submit Order
-          </button>           
+          </button>            
         </form>
       </div>
   </ion-content>

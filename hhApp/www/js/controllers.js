@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-//---------------------------------------LOGIN CONTROLLER---------------------------------------------------------
+//===========================LOGIN CONTROLLER==================================================
 .controller('LoginCtrl',function($scope,$rootScope,$http,$state,AuthLoginService,$ionicPopup,PasswordReminderService) {
     $rootScope.currentUser = '0';
     $scope.login = function(user) {  
@@ -26,22 +26,25 @@ angular.module('starter.controllers', [])
               text: '<b>Submit</b>',
               type: 'button-positive',
               onTap: function(e) {
-                if (!$scope.data.email) {
-                       var alertPopup = $ionicPopup.alert({
-                         cssClass: 'myPopup',
-                         title: 'Warning',
-                         template: 'Incorrect Address Entered!'
-                       });      
-                      e.preventDefault();
-                } else {
-                  PasswordReminderService.getPassword($scope.data.email);
-                }
+                  if (!$scope.data.email) {
+                         var alertPopup = $ionicPopup.alert({
+                           cssClass: 'myPopup',
+                           title: 'Warning',
+                           template: 'Incorrect Address Entered!'
+                         });      
+                        e.preventDefault();
+                  } else {
+                    PasswordReminderService.getPassword($scope.data.email);
+                  }
               }
             }
           ]
         });         
     };   
 })
+
+//====================================NAVBAR CTRL FOR LOGOUT==========================================
+//====================================================================================================
 .controller('NavCtrl',function($scope,$state,AuthLogoutService) {
     $scope.logout = function(){
         AuthLogoutService.logout(function(response){
@@ -50,8 +53,12 @@ angular.module('starter.controllers', [])
         })
     }
 })
-//---------------------------------------SELECTING FROM ACTIVE ROUTES CONTROLLER------------------------------------------
+
+//==================================SELECTING FROM ACTIVE ROUTES CONTROLLER=============================
+//======================================================================================================
 .controller('RouteSelectionCtrl', function($scope,$rootScope, $state,ActiveRoutes,Coords) {
+  console.log(window.localStorage.getItem("savedRouteId"));
+  console.log(window.localStorage.getItem("currentUser"));
    ActiveRoutes.getAll().then(function(d){
      $scope.routes =d;
      console.log($scope.routes);
@@ -64,7 +71,8 @@ angular.module('starter.controllers', [])
   }; 
 })
 
-//---------------------------------------CONTROLLER FOR GOOGLE MAP--------------------------------------------------------
+//======================================CONTROLLER FOR GOOGLE MAP=====================================
+//====================================================================================================
 .controller('MapCtrl', function($scope) {
    console.log("Here is the juice");
     var selectedRoute = JSON.parse(window.localStorage.getItem("savedRoute"));
@@ -123,7 +131,8 @@ angular.module('starter.controllers', [])
    }
 })
 
-//---------------------------------------NAVIGATES TO DROP DETAILS FOR PARTICULAR ROUTE-----------------------------------
+//==============================NAVIGATES TO DROP DETAILS FOR PARTICULAR ROUTE==========================
+//======================================================================================================
 .controller('RouteCtrl', function($scope, $state) {
   $scope.addDropDetails = function(){
     $state.go("tab.route-drop");
@@ -133,7 +142,8 @@ angular.module('starter.controllers', [])
   }
 })
 
-//---------------------------------------ADD DROP DETAILS FOR PARTICULAR ROUTE--------------------------------------------------
+//===============================ADD DROP DETAILS FOR PARTICULAR ROUTE=================================
+//=====================================================================================================
 .controller('DropCtrl', function($scope, $state, DropOptions,$ionicPopup, $resource) {
     console.log(window.localStorage.getItem("savedRouteId"));  
     $scope.dropDownValue = DropOptions.dropDownValue();
@@ -184,7 +194,7 @@ angular.module('starter.controllers', [])
                            }
                        },function(error) {
                            alert(502 +"Internal Server Error ");
-                         });                       
+                          });                       
                     }
                         $state.go("tab.route");           
              } else {
@@ -194,10 +204,53 @@ angular.module('starter.controllers', [])
        }          
     }
 })
-.controller('OrderCtrl', function($scope, $state, $ionicPopup, $resource) {
 
+//=========================ADDING ORDER FOR PARTICULAR ROUTE=============================================
+//====================================================================================================
+.controller('OrderCtrl', function($scope, $state, $ionicPopup,OrderService) {
+    
+    $scope.submitOrderDetails = function(order){
+           var confirmPopup = $ionicPopup.confirm({
+              title: 'Confirm',
+              cssClass: 'myPopup',
+              template: 'Are tou sure you would like to submit order?'
+           });
+           confirmPopup.then(function(res) {
+             if(res) {
+                   pos = navigator.geolocation;
+                   pos.getCurrentPosition(success, error,{ enableHighAccuracy: true,}); 
+                   function error() {
+                       var alertPopup = $ionicPopup.alert({
+                         title: 'Notice',
+                         cssClass: 'myPopup',
+                         template: 'Cannot find your location!'
+                       }); 
+                   }
+                    function success(position){
+                       var coords =[];
+                       var mylat = position.coords.latitude;
+                       var mylong = position.coords.longitude;     
+                       var currentPosition = new google.maps.LatLng(mylat, mylong);
+                       coords.push(currentPosition);
+                      
+                      order.location =coords;
+                      order.routeId = window.localStorage.getItem("savedRouteId");
+                      order.userId = window.localStorage.getItem("currentUser");
+                      
+                      OrderService.submitOrder(order,function(response){
+                          console.log(response);
+                          //$state.go("login");
+                      });                       
+                    }
+                        $state.go("tab.route");           
+             } else {
+             console.log('You are not sure');
+           }
+         });   
+    };    
 })
 
+//====================================================================================================
 .controller('ContactsCtrl', function($scope) {
 
 })
