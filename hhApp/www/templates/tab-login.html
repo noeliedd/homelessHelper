@@ -1,17 +1,20 @@
 <ion-view view-title="Login">
   <ion-content class="padding">
-    <div class="list list-inset" ng-controller = "LoginCtrl">
-      <form ng-submit ="login()">
+    <img src="img/ionic.png" class="img-responsive"alt="Ionic Logo">
+    <img src="img/banner.png" class="img-responsive"alt="Banner">
+    <div class="list" ng-controller = "LoginCtrl" style="text-align:center">
+      <form>
         <label class="item item-input">
-          <input type="text" placeholder="Email" ng-model="email">
+          <input type="text" placeholder="Email" ng-model="user.username">
         </label>
         <label class="item item-input">
-          <input type="text" placeholder="Password" ng-model="password">
+          <input type="text" placeholder="Password" ng-model="user.password">
         </label>
-        <button class="button button-full button-positive" type ="submit">
+        <button class="button button-full button-positive" ng-click="login(user)" type ="submit">
           Login
         </button>   
       </form>
+      <a href=" " ng-click="passwordReminder()">Forgot Your Password?</a>
     </div>  
   </ion-content>
 </ion-view>  

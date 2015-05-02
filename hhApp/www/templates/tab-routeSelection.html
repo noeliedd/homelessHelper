@@ -3,7 +3,7 @@
     <h4 class="routeSelectionText">Select from the active routes below</h4>
     <ion-list>
       <ion-item ng-repeat="route in routes" type="item-text-wrap" >
-         <button class="button button-block button-outline button-positive" data-ng-click="selectRoute(route._id)">
+         <button class="button button-block button-primary button-positive" data-ng-click="selectRoute(route._id)">
             {{route.name}}
          </button>  
            Description: {{route.description}}

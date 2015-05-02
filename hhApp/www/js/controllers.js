@@ -1,36 +1,57 @@
 angular.module('starter.controllers', [])
 
 //---------------------------------------LOGIN CONTROLLER---------------------------------------------------------
-.controller('LoginCtrl',function($scope,$http,$ionicPopup,$state){
-  $scope.login = function(){
-  var email = $scope.email;
-  var password = $scope.password;
-  console.log(email,password);//test
-    
-    $http.post('http://ichh-202592.euw1-2.nitrousbox.com/api/loginUser', {email: email, password: password}).
-    success(function(data, status, headers, config) {
-    // this callback will be called asynchronously
-    // when the response is available
-    if(data == "valid"){
-      $state.go('routeSelection');
-    }else{
-      var alertPopup = $ionicPopup.alert({
-      title: data,
-      template: 'Please check your credentials!'
-      });      
-    }
-  }).
-  error(function(data, status, headers, config) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-  });
-    $scope.email ="";
-    $scope.password ="";
-  }
+.controller('LoginCtrl',function($scope,$rootScope,$http,$state,AuthLoginService,$ionicPopup,PasswordReminderService) {
+    $rootScope.currentUser = '0';
+    $scope.login = function(user) {  
+      console.log(user);
+      AuthLoginService.login(user,function(returnedUser){
+        console.log(returnedUser);
+        $state.go("routeSelection")
+        $scope.user.username ="";
+        $scope.user.password ="";
+      });   
+    }; 
+    $scope.passwordReminder = function() {  
+        $scope.data = {}
+        var myPopup = $ionicPopup.show({
+          cssClass: 'myPopup',
+          template: '<input type="email" ng-model="data.email">',
+          title: 'Enter Your e-mail Address',
+          subTitle: 'Check you mail for password',
+          scope: $scope,
+          buttons: [
+            { text: 'Cancel' },
+            {
+              text: '<b>Submit</b>',
+              type: 'button-positive',
+              onTap: function(e) {
+                if (!$scope.data.email) {
+                       var alertPopup = $ionicPopup.alert({
+                         cssClass: 'myPopup',
+                         title: 'Warning',
+                         template: 'Incorrect Address Entered!'
+                       });      
+                      e.preventDefault();
+                } else {
+                  PasswordReminderService.getPassword($scope.data.email);
+                }
+              }
+            }
+          ]
+        });         
+    };   
 })
-
+.controller('NavCtrl',function($scope,$state,AuthLogoutService) {
+    $scope.logout = function(){
+        AuthLogoutService.logout(function(response){
+            console.log(response);
+            $state.go("login");
+        })
+    }
+})
 //---------------------------------------SELECTING FROM ACTIVE ROUTES CONTROLLER------------------------------------------
-.controller('RouteSelectionCtrl', function($scope, $state,ActiveRoutes,Coords) {
+.controller('RouteSelectionCtrl', function($scope,$rootScope, $state,ActiveRoutes,Coords) {
    ActiveRoutes.getAll().then(function(d){
      $scope.routes =d;
      console.log($scope.routes);
@@ -69,7 +90,7 @@ angular.module('starter.controllers', [])
         alert("Please ensure your browser supports location tracking and that you have it enabled.");
       } 
       function initialize() {
-        var mapOptions = {center: home,zoom: 18, mapTypeId: google.maps.MapTypeId.ROADMAP,draggable: true}; 
+        var mapOptions = {center: home,zoom: 12, mapTypeId: google.maps.MapTypeId.ROADMAP,draggable: true}; 
         map = new google.maps.Map(document.getElementById("map"), mapOptions);         
         var currentPosMarker = new google.maps.Marker({map: map,position:home, animation: google.maps.Animation.BOUNCE}); 
         var image = 'img/homePin.png';
@@ -92,8 +113,8 @@ angular.module('starter.controllers', [])
 
        for(var i=0;i<$scope.coords.length;i++)
        {
-          var lat = $scope.coords[i].k;
-          var lng = $scope.coords[i].D;
+          var lat = $scope.coords[i].A;
+          var lng = $scope.coords[i].F;
           var coord = new google.maps.LatLng(lat,lng);       
           var path = poly.getPath();
           path.push(coord);     
@@ -106,6 +127,9 @@ angular.module('starter.controllers', [])
 .controller('RouteCtrl', function($scope, $state) {
   $scope.addDropDetails = function(){
     $state.go("tab.route-drop");
+  }
+  $scope.addOrderItem = function(){
+    $state.go("tab.route-order");
   }
 })
 
@@ -170,15 +194,13 @@ angular.module('starter.controllers', [])
        }          
     }
 })
+.controller('OrderCtrl', function($scope, $state, $ionicPopup, $resource) {
 
-//--------------------------------------------------------------------------------------------------------------------------------
+})
 
-.controller('FriendsCtrl', function($scope, Coords) {
-  $scope.coords = Coords.all();
-  console.log($scope.coords[0]);
+.controller('ContactsCtrl', function($scope) {
+
 })
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
-  $scope.friend = Friends.get($stateParams.friendId);
-})
+
 
 

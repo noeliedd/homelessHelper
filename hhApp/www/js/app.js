@@ -1,10 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngResource'])
 
 .run(function($ionicPlatform) {
@@ -22,8 +15,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
-
+.config(function($stateProvider, $urlRouterProvider,$httpProvider) {
+  
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -38,13 +31,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   .state('routeSelection', {
     url: '/routeSelection',
     templateUrl: 'templates/tab-routeSelection.html',   
-    controller: 'RouteSelectionCtrl'
+    controller: 'RouteSelectionCtrl',
+        resolve: {
+          loggedin: checkLoggedin
+        }     
   })  
   // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('tab', {
     url: "/tab",
     abstract: true,
-    templateUrl: "templates/tabs.html"
+    templateUrl: "templates/tabs.html",
+    controller: 'NavCtrl'
   })
   // Each tab has its own nav history stack:
   .state('tab.route', {
@@ -65,17 +62,72 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
       }
     })
-.state('tab.friends', {
-      url: '/friends',
+  .state('tab.route-order', {
+      url: '/orders',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'          
+        'tab-route': {
+          templateUrl: 'templates/route-order.html',
+          controller: 'OrderCtrl'
+        }
+      }
+    })  
+.state('tab.contacts', {
+      url: '/contacts',
+      views: {
+        'tab-contacts': {
+          templateUrl: 'templates/tab-contacts.html',
+          controller: 'ContactsCtrl'          
         }
       }
     })
-
-  // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
-
+  
+   $httpProvider.interceptors
+   .push(function($q, $location)
+    {
+        return {
+            response: function(response)
+            { 
+                return response;
+            },
+            responseError: function(response)
+            {
+                if (response.status === 401)                  
+                     $location.url('/login');
+                    return $q.reject(response);                 
+            }
+        };
+    }); 
 });
+var checkLoggedin = function($q, $timeout, $ionicPopup, $location, $rootScope)
+{
+    var deferred = $q.defer();
+    console.log("checked login A");
+    console.log($rootScope.currentUser);
+    var user = $rootScope.currentUser;
+    console.log(user);
+
+        console.log("checked login B");
+        console.log(user);
+        console.log($rootScope.currentUser);
+        $rootScope.currentUser = user;
+        $rootScope.errorMessage = null;
+        // User is Authenticated
+        if (user !== '0')
+            deferred.resolve();
+        // User is Not Authenticated
+        else
+        {  
+            var alertPopup = $ionicPopup.alert({
+                cssClass: 'myPopup',
+                title: '<h4>Notice</h4>',
+                template: '<h5>Login Required</h5>'
+            });  
+            $rootScope.errorMessage = 'You need to log in.';
+            deferred.reject();
+            $location.url('/login');
+        }
+ 
+    
+    return deferred.promise;
+};

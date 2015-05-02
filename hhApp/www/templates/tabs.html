@@ -12,13 +12,11 @@ navigation history that also transitions its views in and out.
   </ion-tab>
 
   <!-- Friends Tab -->
-  <ion-tab title="Location" icon-off="ion-pin" icon-on="ion-pin" href="#/tab/friends">
-    <ion-nav-view name="tab-friends"></ion-nav-view>
+  <ion-tab title="Contacts" icon-off="ion-android-contacts" icon-on="ion-android-contacts" href="#/tab/contacts">
+    <ion-nav-view name="tab-contacts"></ion-nav-view>
   </ion-tab>
 
   <!-- Logout Tab -->
-  <ion-tab title="Logout" icon-off="ion-log-out" icon-on="ion-log-out" href="/login">
+  <ion-tab title="Logout" ng-click="logout()" icon-off="ion-log-out" icon-on="ion-log-out" href="/login">
   </ion-tab>
-
-
 </ion-tabs>

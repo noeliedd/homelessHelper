@@ -1,9 +1,46 @@
 angular.module('starter.services', [])
+//Posts user details to /Login on the server
+.factory('AuthLoginService', function($http,$location,$rootScope){  
+  return{
+      login: function(user,callback){
+          $http.post('http://ichh-202592.euw1-2.nitrousbox.com/login', user)
+              .success(function(user){  
+                console.log(user);
+                $rootScope.currentUser = user;
+                callback(user);
+              })
+      } 
+  }; 
+})
+//Called from the NavCtrl to logout the user
+.factory('AuthLogoutService', function($http,$location,$rootScope){ 
+  return{ 
+    logout: function(callback){
+      $http.post('http://ichh-202592.euw1-2.nitrousbox.com/logout')
+        .success(function(){  
+          $rootScope.currentUser = '0';
+          callback();
+        })
+    } 
+  };
+})
+.factory('PasswordReminderService', function($http){ 
+  return{     
+    getPassword: function(email){      
+      $http.get('http://ichh-202592.euw1-2.nitrousbox.com/api/getPassword?email='+email)
+        .success(function(response){  
+            console.log(response);
+      })
+    } 
+  };
+})
+//Returns all actvie routes from backend server
+//The route id'd are used to display options in the route selection menu 
 .factory('ActiveRoutes', function($http) {
   var ActiveRoutes = {
     getAll: function() {
       // $http returns a promise, which has a then function, which also returns a promise
-      var promise = $http.get('http://ichh-202592.euw1-2.nitrousbox.com/api/activeRoutes').then(function (response) {
+      var promise = $http.get('http://ichh-202592.euw1-2.nitrousbox.com/api/getActiveRoutes').then(function (response) {
         // The then function here is an opportunity to modify the response
         console.log(response);
         // The return value gets picked up by the then in the controller.
@@ -15,7 +52,8 @@ angular.module('starter.services', [])
   };
   return ActiveRoutes;
 })
-
+//GetAll function returns coordinates for the route chosen from the route selection menu tab
+//The chosen route id is passed as a parameter to this function to get the coordinates for the particular route
 .factory('Coords', function($http,$state) {
   var Coords = {
     getAll: function(id) {
@@ -45,42 +83,3 @@ angular.module('starter.services', [])
     }};   
 })
 
-.factory('Friends', function() {
-
-  var friends = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    notes: 'Enjoys drawing things',
-    face: 'https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    notes: 'Odd obsession with everything',
-    face: 'https://avatars3.githubusercontent.com/u/11214?v=3&s=460'
-  }, {
-    id: 2,
-    name: 'Andrew Jostlen',
-    notes: 'Wears a sweet leather Jacket. I\'m a bit jealous',
-    face: 'https://pbs.twimg.com/profile_images/491274378181488640/Tti0fFVJ.jpeg'
-  }, {
-    id: 3,
-    name: 'Adam Bradleyson',
-    notes: 'I think he needs to buy a boat',
-    face: 'https://pbs.twimg.com/profile_images/479090794058379264/84TKj_qa.jpeg'
-  }, {
-    id: 4,
-    name: 'Perry Governor',
-    notes: 'Just the nicest guy',
-    face: 'https://pbs.twimg.com/profile_images/491995398135767040/ie2Z_V6e.jpeg'
-  }];
-
-  return {
-    all: function() {
-      return friends;
-    },
-    get: function(friendId) {
-      // Simple index lookup
-      return friends[friendId];
-    }
-  }
-});
