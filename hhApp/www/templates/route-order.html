@@ -3,13 +3,14 @@
       <div class ="List">
         <form ng-submit="submitOrderDetails(order)">
           <label class="item item-input">
-            Reference Name:            
+            Reference or name of individual:            
           </label>
-          <input type="text" placeholder=" Required Field..." ng-model="order.name" required>
+          <input type="text" placeholder="   Required Field..." ng-model="order.name" required>
           <label class="item item-input">
-            Order Details:            
+            Please enter all relevant details:            
           </label>  
-          <textarea rows="8"placeholder=" Required Field..." ng-model="order.details" required></textarea>
+          <textarea rows="8"placeholder="   Required Field..." ng-model="order.details" required>
+          </textarea>
           <button class="button button-full button-positive" type ="submit">
             Submit Order
           </button>            

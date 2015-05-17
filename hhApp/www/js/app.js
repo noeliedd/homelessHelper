@@ -104,9 +104,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             },
             responseError: function(response)
             {
-                if (response.status === 401)                  
-                     $location.url('/login');
-                    return $q.reject(response);                 
+              if (response.status === 400){
+                      alert("Invalid login credentials");
+                      $location.url('/login');
+                      return $q.reject(response);                    
+                }
+               else if (response.status === 401){
+                      alert("Unauthorized, Login Required");
+                      $location.url('/login');
+                      return $q.reject(response);                    
+                }else if (response.status === 502){
+                      alert(" Bad Gateway 502");
+                      $location.url('/login');
+                      return $q.reject(response);                  
+                }                 
+              
             }
         };
     }); 
@@ -119,8 +131,8 @@ var checkLoggedin = function($q, $timeout, $ionicPopup, $location, $rootScope)
     var user = window.localStorage.getItem("currentUser");
     console.log(user);
 
-        console.log("checked login B");
-        console.log(user);
+//      console.log("checked login B");
+//      console.log(user);
         console.log(window.localStorage.getItem("currentUser"));
         //$rootScope.currentUser = user;
         $rootScope.errorMessage = null;
