@@ -16,10 +16,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .config(function($stateProvider, $urlRouterProvider,$httpProvider) {
-  if(window.localStorage.currentUser) {
-	$urlRouterProvider.otherwise('/routeSelection');
+  console.log(window.localStorage.currentUser);
+  if(window.localStorage.currentUser) {   
+	    $urlRouterProvider.otherwise('/routeSelection');   
   }else{
-    $urlRouterProvider.otherwise('/login');
+      $urlRouterProvider.otherwise('/login');
   }
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -96,7 +97,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
       }
     })
-  $urlRouterProvider.otherwise('/login');
+//   $urlRouterProvider.otherwise('/login');
   
    $httpProvider.interceptors
    .push(function($q, $location)
