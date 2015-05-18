@@ -98,7 +98,7 @@ angular.module('starter.controllers', [])
       function initialize() {
         var mapOptions = {
           center: me,
-          zoom: 12, 
+          zoom: 15, 
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           draggable: true
         }; 
