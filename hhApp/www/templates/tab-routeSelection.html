@@ -2,17 +2,19 @@
   <ion-content class="padding">
     <h4 class="routeSelectionText">Select from the active routes below</h4>
     <ion-list>
-      <ion-item ng-repeat="route in routes" type="item-text-wrap" >
-         <ul>
-          <li>Begins: {{route.routeBeginning}}</li>
-          <li>Ends: {{route.routeEnding}}</li> 
-          <li>Description: {{route.description}}</li>
-        </ul>
-         <button class="button button-block button-primary button-positive" 
-                 data-ng-click="selectRoute(route._id)">
-            {{route.name}}
-         </button>  
-      </ion-item>
+      <div class="card">
+        <ion-item ng-repeat="route in routes" class="item item-text-wrap" type="item-text-wrap" >
+           <ul>
+            <li>Begins: {{route.routeBeginning}}</li>
+            <li>Ends: {{route.routeEnding}}</li> 
+            <li>Description: {{route.description}}</li>
+          </ul>
+           <button class="button button-block button-primary button-positive" 
+                   data-ng-click="selectRoute(route._id)">
+              {{route.name}}
+           </button>  
+        </ion-item>
+     </div>   
     </ion-list>
   </ion-content>
 </ion-view>
